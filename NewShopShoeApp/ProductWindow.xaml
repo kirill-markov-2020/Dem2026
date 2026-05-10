@@ -15,8 +15,8 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="75*"/>
-            <RowDefinition Height="450*"/>
+            <RowDefinition Height="125*"/>
+            <RowDefinition Height="350*"/>
             <RowDefinition Height="75*"/>
         </Grid.RowDefinitions>
         <StackPanel>
@@ -26,15 +26,52 @@
                        Margin="10 10 10 0"/>
             <TextBlock Text="Товары"
                        HorizontalAlignment="Center"/>
-            
+            <StackPanel Orientation="Horizontal"
+                        x:Name="FilterPanel">
+                <ComboBox x:Name="SortingCombobox"
+                          SelectedIndex="0"
+                          Margin="20 0"
+                          Width="200"
+                          Height="50"
+                          SelectionChanged="SortingCombobox_SelectionChanged">
+                    <ComboBoxItem Content="По умолчанию"/>
+                    <ComboBoxItem Content="По убыванию"/>
+                    <ComboBoxItem Content="По возрастанию"/>
+                </ComboBox>
+                <ComboBox x:Name="FilteringCombobox"
+                          SelectedIndex="0"
+                          Margin="20 0"
+                          Width="200"
+                          Height="50"
+                          SelectionChanged="FilteringCombobox_SelectionChanged"/>
+                <TextBox x:Name="SearchTextBox"
+                         TextChanged="SearchTextBox_TextChanged"
+                         Margin="20 5"
+                         Width="200"
+                         Height="50"/>
+
+            </StackPanel>
         </StackPanel>
         <ListBox x:Name="ProductList"
                  Grid.Row="1"
-                 HorizontalContentAlignment="Stretch">
+                 HorizontalContentAlignment="Stretch"
+                 MouseDoubleClick="ProductList_MouseDoubleClick">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border CornerRadius="10"
                             Background="{Binding BackgroundColor}">
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Name="EditProduct" 
+                                          Header="Редактировать"
+                                          Tag="{Binding}"
+                                          Click="EditProduct_Click"/>
+                                <MenuItem Name="DeleteProduct" 
+                                          Header="Удалить"
+                                          Tag="{Binding}"
+                                          Click="DeleteProduct_Click"/>
+                            </ContextMenu>
+                        </Border.ContextMenu>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -102,6 +139,14 @@
                 Content="Выйти"
                 Click="BackButton_Click"
                 HorizontalAlignment="Left"
+                Grid.Row="2"
+                Margin="10 10"
+                Width="150"
+                Height="50"/>
+        <Button x:Name="AddProductButton" 
+                Content="Добавить товар"
+                Click="AddProductButton_Click"
+                HorizontalAlignment="Center"
                 Grid.Row="2"
                 Margin="10 10"
                 Width="150"
