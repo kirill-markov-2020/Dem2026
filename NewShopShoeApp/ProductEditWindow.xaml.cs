@@ -2,6 +2,7 @@
 using NewShopShoeApp.Database;
 using NewShopShoeApp.Helpers;
 using System;
+using System.Data.Entity.Migrations;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -181,9 +182,12 @@ namespace NewShopShoeApp
                 {
                     _db.Product.Add(product);
                 }
+                else
+                {
+                    _db.Product.AddOrUpdate(product);
 
+                }
                 _db.SaveChanges();
-
                 string message = _editingProduct == null ? "Товар успешно добавлен!" : "Товар успешно обновлен!";
                 MessageHelper.ShowInformation(message);
 
