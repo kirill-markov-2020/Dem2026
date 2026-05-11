@@ -38,6 +38,7 @@ namespace NewShopShoeApp
         }
         public void LoadProducts()
         {
+            _db = new ShopShoeDbEntities();
             _products = _db.Product.ToList();
             ProductList.ItemsSource = _products;
             var filters = new List<string>();
@@ -49,14 +50,18 @@ namespace NewShopShoeApp
         {
             AddProductButton.Visibility = Visibility.Collapsed;
             FilterPanel.Visibility = Visibility.Collapsed;
+            OrderButton.Visibility = Visibility.Collapsed;
             if (AccessHelper.IsAdmin)
             {
                 AddProductButton.Visibility = Visibility.Visible;
                 FilterPanel.Visibility = Visibility.Visible;
+                OrderButton.Visibility = Visibility.Visible;
             }
             if (AccessHelper.IsManager)
             {
                 FilterPanel.Visibility = Visibility.Visible;
+                OrderButton.Visibility = Visibility.Visible;
+
             }
         }
 
@@ -125,79 +130,90 @@ namespace NewShopShoeApp
 
         private void EditProduct_Click(object sender, RoutedEventArgs e)
         {
+            if (!AccessHelper.IsAdmin)
+            {
+                MessageHelper.ShowError("Доступ запрещен! Только администратор может редактировать товары.");
+                return;
+            }
             var menuItem = sender as MenuItem;
             var product = menuItem?.Tag as Product;
             if (product == null)
                 return;
             
-            if (AccessHelper.IsAdmin)
+            
+            var selectedProduct = ProductList.SelectedItem as Product;
+            if (selectedProduct == null) 
+                return;
+            if (IsEditWindowOpen())
+                return;
+            var editWindow = new ProductEditWindow(product);
+            if(editWindow.ShowDialog() == true)
             {
-                var selectedProduct = ProductList.SelectedItem as Product;
-                if (selectedProduct == null) 
-                    return;
-                if (IsEditWindowOpen())
-                    return;
-                var editWindow = new ProductEditWindow(product);
-                if(editWindow.ShowDialog() == true)
-                {
-                    LoadProducts();
-                    MessageHelper.ShowInformation("Список товаров обновлён");
-                }
+                LoadProducts();
+                MessageHelper.ShowInformation("Список товаров обновлён");
             }
+            
         }
 
         private void DeleteProduct_Click(object sender, RoutedEventArgs e)
         {
+            if (!AccessHelper.IsAdmin)
+            {
+                MessageHelper.ShowError("Доступ запрещен! Только администратор может удалять товары.");
+                return;
+            }
             var menuItem = sender as MenuItem;
             var product = menuItem?.Tag as Product;
             if(product == null)
                 return;
-            if (AccessHelper.IsAdmin)
+            
+            bool isInOrder = _db.OrderItem.Any(oi => oi.ProductId == product.Id);
+            if(isInOrder)
             {
-                bool isInOrder = _db.OrderItem.Any(oi => oi.ProductId == product.Id);
-                if(isInOrder)
-                {
-                    MessageHelper.ShowError("Товар присутствует в заказах");
-                    return;
-                }
-                var result = MessageBox.Show("Вы действительно хотите удалить данный товар?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == MessageBoxResult.Yes)
-                {
-                    try
-                    {
-                        if (!string.IsNullOrEmpty(product.Photo) && File.Exists(product.Photo))
-                            File.Delete(product.Photo);
-                        _db.Product.Remove(product);
-                        _db.SaveChanges();
-                        LoadProducts();
-                        MessageHelper.ShowInformation("Удалено!");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageHelper.ShowError($"{ex.Message}");
-                    }
-                }
-
+                MessageHelper.ShowError("Товар присутствует в заказах");
+                return;
             }
+            var result = MessageBox.Show("Вы действительно хотите удалить данный товар?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    if (!string.IsNullOrEmpty(product.Photo) && File.Exists(product.Photo))
+                        File.Delete(product.Photo);
+                    _db.Product.Remove(product);
+                    _db.SaveChanges();
+                    LoadProducts();
+                    MessageHelper.ShowInformation("Удалено!");
+                }
+                catch (Exception ex)
+                {
+                    MessageHelper.ShowError($"{ex.Message}");
+                }
+            }
+
+            
         }
 
         private void ProductList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            
-            if (AccessHelper.IsAdmin)
+            if (!AccessHelper.IsAdmin)
             {
-                var selectedProduct = ProductList.SelectedItem as Product;
-                if (selectedProduct == null)
-                    return;
-                if (IsEditWindowOpen())
-                    return;
-                var editWindow = new ProductEditWindow(selectedProduct);
-                if (editWindow.ShowDialog() == true)
-                {
-                    LoadProducts();
-                    MessageHelper.ShowInformation("Список товаров обновлён");
-                }
+                MessageHelper.ShowError("Доступ запрещен! Только администратор может редактировать товары.");
+                return;
             }
+            
+            var selectedProduct = ProductList.SelectedItem as Product;
+            if (selectedProduct == null)
+                return;
+            if (IsEditWindowOpen())
+                return;
+            var editWindow = new ProductEditWindow(selectedProduct);
+            if (editWindow.ShowDialog() == true)
+            {
+                LoadProducts();
+                MessageHelper.ShowInformation("Список товаров обновлён");
+            }
+            
         }
         private bool IsEditWindowOpen()
         {
@@ -212,6 +228,12 @@ namespace NewShopShoeApp
                 
             }
             return false;
+        }
+
+        private void OrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            new OrderWindow().Show();
+            Close();
         }
     }
 }

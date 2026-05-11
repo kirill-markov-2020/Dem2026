@@ -1,0 +1,121 @@
+﻿<Window x:Class="NewShopShoeApp.OrderEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NewShopShoeApp"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="ProductEditWindow" 
+        Height="500" 
+        Width="600"
+        Style="{StaticResource WindowStyle}">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="ID: "
+                   Name="IdTextBlock"
+                   Margin="5,0,5,0"
+                   VerticalAlignment="Center" Height="18"/>
+        <TextBox x:Name="IdTextBox"
+                 Margin="5,5,5,5"
+                 IsReadOnly="True"
+                 Grid.Column="1"/>
+        <TextBlock Text="Артикул: "
+                   Margin="5,0,5,0"
+                   VerticalAlignment="Center"
+                   Grid.Row="1"
+                   Grid.Column="0" 
+                   Height="19"/>
+        <TextBox x:Name="ArticleTextBox"
+                 Margin="5,5,5,5"
+                 Grid.Row="1"
+                 Grid.Column="1"
+                 MaxLength="6"/>
+        <TextBlock Text="Статус заказа: "
+                   Margin="5,0,5,0"
+                   VerticalAlignment="Center"
+                   Grid.Row="2"
+                   Grid.Column="0" Height="18"/>
+        <ComboBox x:Name="StatusComboBox"
+                  Margin="5,5,5,5"
+                  Grid.Row="2"
+                  Grid.Column="1"
+                  DisplayMemberPath="Name"
+                  SelectedValuePath="Id"/>
+        <TextBlock Text="Адрес пункта выдачи: "
+                   Margin="5,0,5,0"
+                   VerticalAlignment="Center"
+                   Grid.Row="3"
+                   Grid.Column="0" Height="18"/>
+        <ComboBox x:Name="PickUpPointComboBox"
+                  Margin="5,5,5,5"
+                  Grid.Row="3"
+                  Grid.Column="1"
+                  DisplayMemberPath="FullAddress"
+                  SelectedValuePath="Id"/>
+        <TextBlock Text="Дата заказа: "
+                   Margin="5,0,5,0"
+                   VerticalAlignment="Center"
+                   Grid.Row="4"
+                   Grid.Column="0" Height="18"/>
+        <DatePicker x:Name="OrderDatePicker"
+                    Margin="5,5,5,5"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    SelectedDateFormat="Short"
+                    />
+        <TextBlock Text="Дата доставки: "
+                   Margin="5,0,5,0"
+                   VerticalAlignment="Center"
+                   Grid.Row="5"
+                   Grid.Column="0" Height="18"/>
+        <DatePicker x:Name="DeliveryDatePicker"
+                    Margin="5,5,5,5"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    SelectedDateFormat="Short"
+                    />
+        <TextBlock Text="Пользователь: "
+                   Margin="5,0,5,0"
+                   VerticalAlignment="Center"
+                   Grid.Row="6"
+                   Grid.Column="0" Height="18"/>
+        <ComboBox x:Name="UserComboBox"
+                  Margin="5,5,5,5"
+                  Grid.Row="6"
+                  Grid.Column="1"
+                  DisplayMemberPath="FullName"
+                  SelectedValuePath="Id"/>
+        <StackPanel Grid.Row="7" 
+                    Grid.ColumnSpan="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Center" 
+                    Margin="10">
+            <Button x:Name="SaveButton" 
+                    Content="Сохранить" 
+                    Width="100" 
+                    Height="40" 
+                    Margin="5" 
+                    Click="SaveButton_Click"/>
+            <Button x:Name="CancelButton" 
+                    Content="Отмена" 
+                    Width="100" 
+                    Height="40" 
+                    Margin="5" 
+                    Click="CancelButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

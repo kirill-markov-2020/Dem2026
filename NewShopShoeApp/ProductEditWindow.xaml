@@ -46,6 +46,7 @@
         <TextBox x:Name="ArticleTextBox"
                  Margin="5"
                  Grid.Row="1"
+                 MaxLength="6"
                  Grid.Column="1"/>
         <TextBlock Text="Наименование: "
                    Margin="5"
