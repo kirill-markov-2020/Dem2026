@@ -41,11 +41,14 @@ namespace NewShopShoeApp
             _db = new ShopShoeDbEntities();
             _products = _db.Product.ToList();
             ProductList.ItemsSource = _products;
+
+            /* Заполнение комбобокса фильтрации поставщиками*/
             var filters = new List<string>();
             filters.Add("Все поставщики");
             filters.AddRange(_db.Supplier.Select(s => s.Name).ToList());
             FilteringCombobox.ItemsSource = filters;
         }
+        /*Разграничение прав доступа по ролям*/
         public void LoadUI()
         {
             AddProductButton.Visibility = Visibility.Collapsed;
@@ -86,6 +89,7 @@ namespace NewShopShoeApp
         {
             ApplyFilter();
         }
+        /*Логика фильтрации, сортировки  и поиска */
         public void ApplyFilter()
         {
             if (SearchTextBox == null || FilteringCombobox == null || SortingCombobox == null)
@@ -193,7 +197,7 @@ namespace NewShopShoeApp
 
             
         }
-
+        /*Редактирование товара при двойном клике по нему*/
         private void ProductList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (!AccessHelper.IsAdmin)
@@ -215,6 +219,7 @@ namespace NewShopShoeApp
             }
             
         }
+        /*Невозможность открытия более одного окна редактирования*/
         private bool IsEditWindowOpen()
         {
             foreach(Window window in Application.Current.Windows)

@@ -67,7 +67,7 @@ namespace NewShopShoeApp
             SupplierComboBox.ItemsSource = _db.Supplier.ToList();
 
         }
-
+        /*Вспомогательный класс для загрузки фото в форму для добавления товара*/
         public BitmapImage LoadImageFromPath(string path)
         {
             try
@@ -87,6 +87,7 @@ namespace NewShopShoeApp
             }
 
         }
+        /*Если фото нет, то данный класс подставляет заглушку*/
         public BitmapImage GetDefaultImage()
         {
             try
@@ -104,7 +105,7 @@ namespace NewShopShoeApp
                 return null;
             }
         }
-
+        /*Класс, помогающий выбрать фото при нажатии на кнопку */
         private void SelectPhotoButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -199,6 +200,7 @@ namespace NewShopShoeApp
                 MessageHelper.ShowError($"Ошибка сохранения: {ex.Message}");
             }
         }
+        /*Копирование фото в папку с проектом*/
         public string CopyPhotoToProject(string sourcePath)
         {
             string targetDir = AppDomain.CurrentDomain.BaseDirectory + "Resources/";
@@ -236,6 +238,12 @@ namespace NewShopShoeApp
                 }
             }
         }*/
+
+
+
+
+
+        /*Изменение размера изображения*/
         public void ResizeImage(string sourcePath, string targetPath, int maxWidth, int maxHeight)
         {
             using (var srcImage = Image.FromFile(sourcePath))

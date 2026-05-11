@@ -42,7 +42,7 @@ namespace NewShopShoeApp
 
             }
         }
-
+        /*Загрузка данных в ListBox*/        
         public void LoadOrderData()
         {
             IdTextBox.Text = _editingOrder.Id.ToString();
@@ -60,7 +60,7 @@ namespace NewShopShoeApp
             PickUpPointComboBox.ItemsSource = _db.PickUpPoint.ToList();
             
         }
-        
+        /*Валидация полей*/
         private bool ValidateFields()
         {
             var errors = new StringBuilder();
