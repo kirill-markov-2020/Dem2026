@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NewShopShoeApp"
-        xmlns:converters="clr-namespace:NewShopShoeApp.Converters"
+        xmlns:con="clr-namespace:NewShopShoeApp.Converters"
         mc:Ignorable="d"
         Title="Товары" 
         Height="800" 
@@ -12,7 +12,7 @@
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}">
     <Window.Resources>
-        <converters:ImagePathConverter x:Key="ImagePathConverter"/>
+        <con:ImagePathConverter x:Key="ImageConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -80,7 +80,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Border Margin="5 0">
-                                <Image Source="{Binding Photo, Converter={StaticResource ImagePathConverter}}"
+                                <Image Source="{Binding Photo, Converter={StaticResource ImageConverter}}"
                                        Height="110"
                                        Width="110"/>
                             </Border>
@@ -105,13 +105,15 @@
                                         <Run Text="Поставщик: "/>
                                         <Run Text="{Binding Supplier.Name}"/>
                                     </TextBlock>
-                                    <TextBlock>
-                                        <Run Text="Цена: "/>
-                                        <Run Text="{Binding NewPrice, Mode=OneWay, StringFormat={}{0:F2} руб.}"/>
-                                        <Run Text="{Binding Price, StringFormat={}{0:F2} руб.}"
-                                             TextDecorations="Strikethrough"
-                                             Foreground="Red"/>
-                                    </TextBlock>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Цена: "/>
+                                        <TextBlock Text="{Binding NewPrice, Mode=OneWay, StringFormat={}{0:F2} руб. }"/>
+                                        <TextBlock Text=" "/>
+                                        <TextBlock x:Name="OldPriceRunText" Text="{Binding Price, StringFormat={}{0:F2} руб.}"
+                                             TextDecorations="Strikethrough" 
+                                             Foreground="Red"
+                                             Visibility="{Binding PriceVisibility}"/>
+                                    </StackPanel>
                                     <TextBlock>
                                         <Run Text="Единица измерения: "/>
                                         <Run Text="{Binding Unit.Name}"/>

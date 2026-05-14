@@ -30,11 +30,12 @@ namespace NewShopShoeApp
         }
         public void LoadProducts()
         {
+
             _db = new ShopShoeDbEntities();
             _products = _db.Product.ToList();
+            
             ProductList.ItemsSource = _products;
-
-            /* Заполнение комбобокса фильтрации поставщиками*/
+            
             var filters = new List<string>();
             filters.Add("Все поставщики");
             filters.AddRange(_db.Supplier.Select(s => s.Name).ToList());
@@ -84,32 +85,31 @@ namespace NewShopShoeApp
         /*Логика фильтрации, сортировки  и поиска */
         public void ApplyFilter()
         {
-            if (SearchTextBox == null || FilteringCombobox == null || SortingCombobox == null)
+            if (SortingCombobox == null || FilteringCombobox == null || SearchTextBox == null)
                 return;
             var query = _products.AsEnumerable();
             string search = SearchTextBox.Text ?? "";
             string filter = FilteringCombobox.SelectedItem as string ?? "Все поставщики";
             int sort = SortingCombobox.SelectedIndex;
-
             if (!string.IsNullOrWhiteSpace(search))
             {
                 query = query.Where(s => (s.Name != null && s.Name.ToLower().Contains(search.ToLower())) ||
-                (s.Description != null && s.Description.ToLower().Contains(search.ToLower())) ||
-                (s.Category != null && s.Category.Name.ToLower().Contains(search.ToLower())) ||
-                (s.Unit != null && s.Unit.Name.ToLower().Contains(search.ToLower())) ||
-                (s.Supplier != null && s.Supplier.Name.ToLower().Contains(search.ToLower())) ||
-                (s.Producer != null && s.Producer.Name.ToLower().Contains(search.ToLower())));
+                (s.Description != null && s.Name.ToLower().Contains(search.ToLower())) ||
+                (s.Supplier.Name != null && s.Supplier.Name.ToLower().Contains(search.ToLower())) ||
+                (s.Producer.Name != null && s.Producer.Name.ToLower().Contains(search.ToLower())) ||
+                (s.Category.Name != null && s.Category.Name.ToLower().Contains(search.ToLower())) ||
+                (s.Unit.Name != null && s.Unit.Name.ToLower().Contains(search.ToLower())));
             }
 
-            if(filter != "Все поставщики")
+            if (filter != "Все поставщики")
                 query = query.Where(s => s.Supplier != null && s.Supplier.Name == filter);
 
             if (sort == 1)
                 query = query.OrderByDescending(s => s.AmountStock);
-            else if(sort == 2)
+            if(sort == 2)
                 query = query.OrderBy(s => s.AmountStock);
             ProductList.ItemsSource = query.ToList();
-            
+
         }
 
         private void AddProductButton_Click(object sender, RoutedEventArgs e)

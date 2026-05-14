@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace NewShopShoeApp.Database
@@ -11,6 +12,7 @@ namespace NewShopShoeApp.Database
     {
         public decimal NewPrice => Price * (1 - (Discount / 100));
         public Brush BackgroundColor => GetBack();
+        public Visibility PriceVisibility => GetVisibility();
 
         private Brush GetBack()
         {
@@ -23,6 +25,14 @@ namespace NewShopShoeApp.Database
                 return Brushes.LightBlue;
             }
             return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7FFF00"));
+        }
+        public Visibility GetVisibility()
+        {
+            if (Discount != 0)
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
         }
     }
 }
